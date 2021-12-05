@@ -17,10 +17,17 @@ const AddTodo = ({ submitHandler }) => {
     <View>
       <TextInput
         style={styles.input}
+        value={text}
         placeholder="new todo..."
         onChangeText={changeHandler}
       />
-      <Button title="Add Todo" onPress={() => submitHandler(text)} />
+      <Button
+        title="Add Todo"
+        onPress={() => {
+          submitHandler(text);
+          setText("");
+        }}
+      />
     </View>
   );
 };

@@ -9,6 +9,9 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import AddTodo from "./components/addTodo";
 import Header from "./components/header";
@@ -37,26 +40,39 @@ export default function App() {
   };
 
   const submitHandler = (text) => {
-    const todoItem = { id: todo.length + 1, text };
-    setTodo((prevTodo) => [...prevTodo, todoItem]);
+    if (text.length > 3) {
+      const todoItem = { id: todo.length + 1, text };
+      setTodo((prevTodo) => [...prevTodo, todoItem]);
+    } else {
+      Alert.alert("OOPS!", "todos must be of length minimum 3 character...", [
+        { text: "understood", onPress: () => console.log("Alert Pressed") },
+      ]);
+    }
   };
   return (
-    <View style={styles.container}>
-      <Header />
-      <View style={styles.content}>
-        <AddTodo submitHandler={submitHandler} />
-        <View style={styles.list}>
-          <FlatList
-            keyExtractor={(item) => item.id}
-            data={todo}
-            renderItem={({ item }) => (
-              <Todoitem item={item} pressHandler={pressHandler} />
-            )}
-          />
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        console.log("Keyboard Dismissed");
+      }}
+    >
+      <View style={styles.container}>
+        <Header />
+        <View style={styles.content}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              keyExtractor={(item) => item.id}
+              data={todo}
+              renderItem={({ item }) => (
+                <Todoitem item={item} pressHandler={pressHandler} />
+              )}
+            />
+          </View>
         </View>
+        <StatusBar style="auto" />
       </View>
-      <StatusBar style="auto" />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
